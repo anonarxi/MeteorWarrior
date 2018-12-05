@@ -101,9 +101,13 @@ public class MeteorWarriorMenu extends AppCompatActivity {
     public void sendMessage(View view)
     {
         Intent intent = new Intent(MeteorWarriorMenu.this, jeu.class);
-        timer.purge();
-        timer2.purge();
-        timer3.purge();
+        timer.cancel();
+        timer=null;
+        timer2.cancel();
+        timer2=null;
+        timer3.cancel();
+        timer3=null;
+
         startActivity(intent);
     }
 

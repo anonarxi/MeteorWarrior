@@ -5,4 +5,9 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="score_150">Score : 150</string>
+    <string name="high_score_0">high score : 0</string>
+    <string name="rejouer">REJOUER</string>
+    <string name="menu">MENU</string>
 </resources>

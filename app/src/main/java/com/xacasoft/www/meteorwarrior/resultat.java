@@ -40,8 +40,10 @@ public class resultat extends AppCompatActivity {
 
     public void tryagain(View view){
         startActivity(new Intent(getApplicationContext(),jeu.class));
-
     }
 
+    public void menu(View view){
+        startActivity(new Intent(getApplicationContext(),MeteorWarriorMenu.class));
+    }
 
 }
