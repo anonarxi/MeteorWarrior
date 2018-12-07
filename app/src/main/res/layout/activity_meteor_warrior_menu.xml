@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fullscreen_content"
-        android:onClick="sendMessage"
+
         >
 
 
@@ -64,17 +64,17 @@
             tools:ignore="UselessParent">
 
 
-
             <Button
                 android:id="@+id/IntroButton"
                 style="@style/Boutonstyle1"
-                android:textSize="40sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:background="@null"
+                android:text="Jouer"
+                android:textSize="40sp"
                 android:textStyle="bold"
-                android:text="Jouer" />
+                android:onClick="sendMessage"/>
 
         </LinearLayout>
     </FrameLayout>

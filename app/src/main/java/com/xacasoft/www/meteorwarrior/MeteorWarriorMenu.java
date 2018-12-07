@@ -2,8 +2,11 @@ package com.xacasoft.www.meteorwarrior;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -28,6 +31,7 @@ public class MeteorWarriorMenu extends AppCompatActivity {
     List<Integer> screenH = new ArrayList<Integer>();
     Handler handler = new Handler();
 
+    private static SoundPlayer sound;
 
     private  ImageView supp4 = null;
     private  ImageView supp5 = null;
@@ -39,6 +43,7 @@ public class MeteorWarriorMenu extends AppCompatActivity {
     private Timer timer3 = new Timer();
     private int pnjId[]={R.drawable.adventurer_idle_2_00,R.drawable.adventurer_idle_2_01,R.drawable.adventurer_idle_2_02,R.drawable.adventurer_idle_2_03};
     private int frame=0;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,8 @@ public class MeteorWarriorMenu extends AppCompatActivity {
             screenW.add( Math.round( (Swidth/12.0f)*i)  );
             screenH.add( Math.round((Sheight/12.0f)*i)  );
         }
+        sound = new SoundPlayer(this);
+        sound.playBackSoundMenu();
 
         ImageView supp = new ImageView(getApplicationContext());
         supp.setImageResource(R.drawable.hilshad);
@@ -100,14 +107,21 @@ public class MeteorWarriorMenu extends AppCompatActivity {
 
     public void sendMessage(View view)
     {
-        Intent intent = new Intent(MeteorWarriorMenu.this, jeu.class);
-        timer.cancel();
-        timer=null;
-        timer2.cancel();
-        timer2=null;
-        timer3.cancel();
-        timer3=null;
 
+        Intent intent = new Intent(MeteorWarriorMenu.this, jeu.class);
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        if (timer2 != null) {
+            timer2.cancel();
+            timer2 = null;
+        }
+        if (timer3 != null) {
+            timer3.cancel();
+            timer3=null;
+        }
+        sound.stopBackSoundMenu();
         startActivity(intent);
     }
 

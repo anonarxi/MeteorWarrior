@@ -1,7 +1,10 @@
 package com.xacasoft.www.meteorwarrior;
 import android.content.Intent;
 import android.graphics.Point;
+import android.media.AudioAttributes;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,8 +40,10 @@ public class jeu extends AppCompatActivity {
 
     private Handler handler = new Handler();
     private Timer timer = new Timer();
+    private static SoundPlayer sound;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,9 @@ public class jeu extends AppCompatActivity {
             screenW.add( Math.round( (screenWidth/12.0f)*i)  );
             screenH.add( Math.round((screenHeight/12.0f)*i)  );
         }
+
+        sound = new SoundPlayer(this);
+        sound.playBackSoundGAME();
 
         scoreLabel = (TextView) findViewById(R.id.scoreLabel);
         vieLabel = (TextView) findViewById(R.id.vie);
@@ -104,6 +112,7 @@ public class jeu extends AppCompatActivity {
                 tmp.setY(screenH.get(( (screen_div-2)/nb_proj )* tmpi));
                 score += 100;
                 scoreLabel.setText("Score : "+score);
+                sound.playHitSound();
                 return true;
             }
             else
@@ -124,10 +133,14 @@ public class jeu extends AppCompatActivity {
                 vie--;
                 vieLabel.setText("Vie : "+vie);
                 if(vie<1){
-                    timer.cancel();
-                    timer=null;
+                    sound.playEndSound();
+                    sound.stopBackSoundGAME();
                     Intent intent = new Intent(getApplicationContext(),resultat.class);
                     intent.putExtra("SCORE",score);
+                    if(timer != null) {
+                        timer.cancel();
+                        timer = null;
+                    }
                     startActivity(intent);
                     return ;
                 }

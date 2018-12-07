@@ -3,6 +3,8 @@ package com.xacasoft.www.meteorwarrior;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +12,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 public class resultat extends AppCompatActivity {
 
+    private static SoundPlayer sound;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +25,9 @@ public class resultat extends AppCompatActivity {
         getSupportActionBar().hide();
         TextView scoreLab = (TextView) findViewById(R.id.score);
         TextView highScoreLabel = (TextView) findViewById(R.id.highscoreLabel);
+
+        sound = new SoundPlayer(this);
+        sound.playBackSoundGAME();
 
         int score = getIntent().getIntExtra("SCORE",0);
         scoreLab.setText("Score : "+score);
@@ -39,10 +47,12 @@ public class resultat extends AppCompatActivity {
     }
 
     public void tryagain(View view){
+        sound.stopBackSoundGAME();
         startActivity(new Intent(getApplicationContext(),jeu.class));
     }
 
     public void menu(View view){
+        sound.stopBackSoundGAME();
         startActivity(new Intent(getApplicationContext(),MeteorWarriorMenu.class));
     }
 
