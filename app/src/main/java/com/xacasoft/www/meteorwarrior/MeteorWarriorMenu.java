@@ -27,8 +27,8 @@ import java.util.TimerTask;
 import 	android.view.View;
 
 public class MeteorWarriorMenu extends AppCompatActivity {
-    List<Integer> screenW = new ArrayList<Integer>();
-    List<Integer> screenH = new ArrayList<Integer>();
+    List<Integer> screenW = new ArrayList<>();
+    List<Integer> screenH = new ArrayList<>();
     Handler handler = new Handler();
 
     private static SoundPlayer sound;
@@ -52,13 +52,13 @@ public class MeteorWarriorMenu extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_meteor_warrior_menu);
-        FrameLayout rl = (FrameLayout) findViewById(R.id.base);
+        FrameLayout rl = findViewById(R.id.base);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         final int Swidth = size.x;
         final int Sheight = size.y;
-        int i,j;
+        int i;
         for(i=0;i<=12;i++){
             screenW.add( Math.round( (Swidth/12.0f)*i)  );
             screenH.add( Math.round((Sheight/12.0f)*i)  );

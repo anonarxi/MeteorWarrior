@@ -37,11 +37,16 @@ public class jeu extends AppCompatActivity {
     private int minsp =30;
     private int score =0;
     private int vie = 5;
+    private float vitesse =0;
 
     private Handler handler = new Handler();
     private Timer timer = new Timer();
+    private Timer timer3 = new Timer();
     private static SoundPlayer sound;
 
+    private int pnjId[]={R.drawable.adventurer_idle_2_00,R.drawable.adventurer_air_attack1_00,R.drawable.adventurer_air_attack1_01,R.drawable.adventurer_air_attack1_02,R.drawable.adventurer_air_attack1_03};
+    private int frame=0;
+    private  ImageView hero = null;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -68,11 +73,18 @@ public class jeu extends AppCompatActivity {
         sound = new SoundPlayer(this);
         sound.playBackSoundGAME();
 
-        scoreLabel = (TextView) findViewById(R.id.scoreLabel);
-        vieLabel = (TextView) findViewById(R.id.vie);
+        scoreLabel =  findViewById(R.id.scoreLabel);
+        vieLabel = findViewById(R.id.vie);
         scoreLabel.setText("Score : "+score);
         vieLabel.setText("Vie : "+vie);
         Random r= new Random();
+
+        hero = new ImageView(getApplicationContext());
+        hero.setImageResource(R.drawable.adventurer_idle_2_00);
+        lp = new FrameLayout.LayoutParams(screenW.get(4) , screenH.get(4));
+        lp.setMargins(0,screenH.get(7),0,0);
+        hero.setLayoutParams(lp);
+        rl.addView(hero);
 
         for(i=0;i<nb_proj;i++) {
             Projectile[i] = new ImageView(getApplicationContext());
@@ -97,7 +109,7 @@ public class jeu extends AppCompatActivity {
                 });
             }
         },0,20);
-
+       // timer3.schedule(new Task3(), 1000);
     }
 
     public class destroyit implements View.OnTouchListener {
@@ -106,10 +118,15 @@ public class jeu extends AppCompatActivity {
             Random r=new Random();
             int tmpi;
             if(arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                ImageView tmp = (ImageView)findViewById(arg0.getId());
+                ImageView tmp = findViewById(arg0.getId());
+                hero.setY(tmp.getY());
+                timer3.schedule(new Task3(), 50);
                 tmp.setX(screenW.get(screen_div));
-                tmpi=r.nextInt(nb_proj-1)+1;
+                tmpi=r.nextInt(nb_proj);
                 tmp.setY(screenH.get(( (screen_div-2)/nb_proj )* tmpi));
+                if(vitesse < 20) {
+                    vitesse+=0.5;
+                }
                 score += 100;
                 scoreLabel.setText("Score : "+score);
                 sound.playHitSound();
@@ -128,7 +145,7 @@ public class jeu extends AppCompatActivity {
         Random r= new Random();
         for(i=0;i<nb_proj;i++) {
 
-            Projectile[i].setX(Projectile[i].getX()-speed[i]);
+            Projectile[i].setX(Projectile[i].getX()-speed[i] );
             if(Projectile[i].getX() < 0 ){
                 vie--;
                 vieLabel.setText("Vie : "+vie);
@@ -141,14 +158,44 @@ public class jeu extends AppCompatActivity {
                         timer.cancel();
                         timer = null;
                     }
+                    if (timer3 != null) {
+                        timer3.cancel();
+                        timer3=null;
+                    }
                     startActivity(intent);
                     return ;
                 }
                 Projectile[i].setX(screenW.get(screen_div));
-                speed[i] = r.nextInt(maxsp-minsp)+minsp;
+                speed[i] = r.nextInt(maxsp+(int)vitesse-(minsp+(int)vitesse))+minsp + (int)vitesse;
                 tmp=r.nextInt(nb_proj-1)+1;
                 Projectile[i].setY(screenH.get(( (screen_div-2)/nb_proj )* tmp));
             }
+        }
+    }
+
+    public class Task3 extends TimerTask {
+        @Override
+        public void run() {
+            if(frame <= 4) {
+                frame++;
+            }
+            hero.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(frame < 5) {
+                        hero.setImageResource(pnjId[frame]);
+                    }
+                }
+            });
+            if(frame < 5){
+                if(timer3 != null) {
+                    timer3.schedule(new Task3(), 50);
+                }
+            }
+            else{
+                frame=0;
+            }
+
         }
     }
 }
