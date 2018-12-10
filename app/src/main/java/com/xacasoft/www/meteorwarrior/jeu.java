@@ -1,7 +1,6 @@
 package com.xacasoft.www.meteorwarrior;
 import android.content.Intent;
 import android.graphics.Point;
-import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
@@ -16,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,29 +24,27 @@ public class jeu extends AppCompatActivity {
     private TextView scoreLabel;
     private TextView vieLabel;
     final private int nb_proj = 3;
-    final private int nb_proj2 = 4;
+    final private int nb_proj2 = nb_proj+1;
     final private int screen_div = 12;
-    final private int proj_type = R.drawable.star;
-    final private int proj_spe = R.drawable.starspe;
-    private List<Integer> screenW = new ArrayList<Integer>();
-    private List<Integer> screenH = new ArrayList<Integer>();
-    private ImageView[] Projectile= new ImageView[nb_proj2];
-    private int[] speed = new int[nb_proj2];
+    private final List<Integer> screenW = new ArrayList<>();
+    private final List<Integer> screenH = new ArrayList<>();
+    private final ImageView[] Projectile= new ImageView[nb_proj2];
+    private int toDarkSide=0;
+    private final int[] speed = new int[nb_proj2];
 
-    private int screenWidth;
-    private int screenHeight;
-    private int maxsp =40;
-    private int minsp =30;
+    private final int maxsp =40;
+    private final int minsp =30;
     private int score =0;
     private int vie = 5;
     private float vitesse =0;
 
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private Timer timer = new Timer();
+    private Timer timer2 = new Timer();
     private Timer timer3 = new Timer();
     private static SoundPlayer sound;
 
-    private int pnjId[]={R.drawable.adventurer_idle_2_00,R.drawable.adventurer_air_attack1_00,R.drawable.adventurer_air_attack1_01,R.drawable.adventurer_air_attack1_02,R.drawable.adventurer_air_attack1_03};
+    private final int[] pnjId={R.drawable.adventurer_idle_2_00,R.drawable.adventurer_air_attack1_00,R.drawable.adventurer_air_attack1_01,R.drawable.adventurer_air_attack1_02,R.drawable.adventurer_air_attack1_03};
     private int frame=0;
     private  ImageView hero = null;
 
@@ -56,20 +54,20 @@ public class jeu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jeu);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
-        FrameLayout rl = (FrameLayout) findViewById(R.id.baselevel);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        FrameLayout rl = findViewById(R.id.baselevel);
         WindowManager wm = getWindowManager();
         Display disp = wm.getDefaultDisplay();
         Point size = new Point();
         disp.getSize(size);
-        screenWidth = size.x;
-        screenHeight = size.y;
+        int screenWidth = size.x;
+        int screenHeight = size.y;
         destroyit touchListener = new destroyit();
         FrameLayout.LayoutParams lp;
         int i;
         for(i=0;i<=screen_div;i++){
-            screenW.add( Math.round( (screenWidth/12.0f)*i)  );
-            screenH.add( Math.round((screenHeight/12.0f)*i)  );
+            screenW.add( Math.round( (screenWidth /12.0f)*i)  );
+            screenH.add( Math.round((screenHeight /12.0f)*i)  );
         }
 
         sound = new SoundPlayer(this);
@@ -91,16 +89,19 @@ public class jeu extends AppCompatActivity {
         for(i=0;i<nb_proj2;i++) {
             Projectile[i] = new ImageView(getApplicationContext());
             if(i>=nb_proj){
+                int proj_spe = R.drawable.starspe;
                 Projectile[i].setImageResource(proj_spe);
+                Projectile[i].setId((int)999);
             }
             else {
+                int proj_type = R.drawable.star;
                 Projectile[i].setImageResource(proj_type);
+                Projectile[i].setId(i);
             }
             speed[i] = r.nextInt(maxsp-minsp)+minsp;
             lp = new FrameLayout.LayoutParams(screenW.get(screen_div/nb_proj) , screenH.get(screen_div/nb_proj));
             lp.setMargins(screenW.get(screen_div-1),screenH.get(( (screen_div-2)/nb_proj )*(i+1)),0,0);
             Projectile[i].setLayoutParams(lp);
-            Projectile[i].setId(i);
             Projectile[i].setOnTouchListener(touchListener);
             rl.addView(Projectile[i]);
         }
@@ -116,32 +117,49 @@ public class jeu extends AppCompatActivity {
                 });
             }
         },0,20);
-       // timer3.schedule(new Task3(), 1000);
+
     }
 
-    public class destroyit implements View.OnTouchListener {
+    class destroyit implements View.OnTouchListener {
         @Override
         public boolean onTouch(View arg0, MotionEvent arg1) {
             Random r=new Random();
             int tmpi;
+            int tmp_id;
             if(arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                ImageView tmp = findViewById(arg0.getId());
+                tmp_id=arg0.getId();
+                ImageView tmp = findViewById(tmp_id);
                 hero.setY(tmp.getY());
-                if(timer3 != null) {
+                if (timer3 != null) {
                     timer3.schedule(new Task3(), 50);
-                }
-                else{
+                } else {
                     return false;
                 }
-                tmp.setX(screenW.get(screen_div));
-                tmpi=r.nextInt(nb_proj);
-                tmp.setY(screenH.get(( (screen_div-2)/nb_proj )* tmpi));
-                if(vitesse < 6) {
-                    vitesse+=0.5;
-                }
                 score += 100;
-                scoreLabel.setText("Score : "+score);
+                scoreLabel.setText("Score : " + score);
                 sound.playHitSound();
+                if(tmp_id==(int)999){
+                    tmp.setImageResource(R.drawable.starspebreak);
+                    tmp.setId((int)998);
+                }
+
+                else {
+                    if(tmp_id==(int)998){
+                        tmp.setImageResource(R.drawable.starspe);
+                        tmp.setId((int)999);
+                    }
+                    if(tmp_id==(int)996){
+                        findViewById(R.id.ink).bringToFront();
+                        findViewById(R.id.ink).setVisibility(View.VISIBLE);
+                        timer2.schedule(new Task2(), 1000,5000);
+                    }
+                    tmp.setX(screenW.get(screen_div));
+                    tmpi = r.nextInt(nb_proj);
+                    tmp.setY(screenH.get(((screen_div - 2) / nb_proj) * tmpi));
+                    if (vitesse < 6) {
+                        vitesse += 0.5;
+                    }
+                }
                 return true;
             }
             else
@@ -152,11 +170,16 @@ public class jeu extends AppCompatActivity {
     }
 
 
-    public void changePos(){
+    private void changePos(){
         int i,tmp;
         Random r= new Random();
+        if(score > 1000 && toDarkSide==0){
+            Projectile[0].setImageResource(R.drawable.darkstar);
+            Projectile[0].setId((int)996);
+            toDarkSide=1;
+        }
         for(i=0;i<nb_proj2;i++) {
-            if(score < 500 && i>=nb_proj){
+            if(score < 1000 && i>=nb_proj){
                 break;
             }
             Projectile[i].setX(Projectile[i].getX()-speed[i] );
@@ -171,6 +194,10 @@ public class jeu extends AppCompatActivity {
                     if(timer != null) {
                         timer.cancel();
                         timer = null;
+                    }
+                    if(timer2 != null) {
+                        timer2.cancel();
+                        timer2 = null;
                     }
                     if (timer3 != null) {
                         timer3.cancel();
@@ -187,7 +214,7 @@ public class jeu extends AppCompatActivity {
         }
     }
 
-    public class Task3 extends TimerTask {
+    class Task3 extends TimerTask {
         @Override
         public void run() {
             if(frame <= 4) {
@@ -212,4 +239,19 @@ public class jeu extends AppCompatActivity {
 
         }
     }
+    class Task2 extends TimerTask {
+        @Override
+        public void run() {
+
+            findViewById(R.id.ink).post(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.ink).setVisibility(View.GONE);
+                }
+            });
+
+            }
+
+        }
+
 }

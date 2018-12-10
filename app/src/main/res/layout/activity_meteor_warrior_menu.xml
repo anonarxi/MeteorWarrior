@@ -5,17 +5,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/titletoon"
     android:id="@+id/base"
+    android:onClick="sendMessage"
     tools:context=".MeteorWarriorMenu">
-
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fullscreen_content"
-
-        >
-
 
         <LinearLayout
             android:id="@+id/titre"
@@ -30,6 +21,7 @@
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:gravity="center"
+                android:contentDescription="@string/un_bouclier_dor"
                 android:layout_height="wrap_content"
                 android:src="@drawable/shield2" />
 
@@ -46,11 +38,11 @@
             <TextView
                 android:id="@+id/text_view_id"
                 style="@style/Boutonstyle1"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
-                android:text="Meteor Warrior"
+                android:text="@string/meteor_warrior"
                 android:textStyle="bold"
                 android:textSize="40sp" />
         </LinearLayout>
@@ -64,21 +56,18 @@
             tools:ignore="UselessParent">
 
 
-            <Button
+            <TextView
                 android:id="@+id/IntroButton"
                 style="@style/Boutonstyle1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:layout_weight="10"
                 android:background="@null"
-                android:text="Jouer"
+                android:text="@string/jouer"
                 android:textSize="40sp"
                 android:textStyle="bold"
-                android:onClick="sendMessage"/>
+                />
 
         </LinearLayout>
-    </FrameLayout>
-
-
-
     </FrameLayout>

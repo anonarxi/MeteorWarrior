@@ -2,13 +2,10 @@ package com.xacasoft.www.meteorwarrior;
 
 import android.content.Intent;
 import android.graphics.Point;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -19,6 +16,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,9 +25,8 @@ import java.util.TimerTask;
 import 	android.view.View;
 
 public class MeteorWarriorMenu extends AppCompatActivity {
-    List<Integer> screenW = new ArrayList<>();
-    List<Integer> screenH = new ArrayList<>();
-    Handler handler = new Handler();
+    private final List<Integer> screenW = new ArrayList<>();
+    private final List<Integer> screenH = new ArrayList<>();
 
     private static SoundPlayer sound;
 
@@ -41,7 +38,7 @@ public class MeteorWarriorMenu extends AppCompatActivity {
     private Timer timer = new Timer();
     private Timer timer2 = new Timer();
     private Timer timer3 = new Timer();
-    private int pnjId[]={R.drawable.adventurer_idle_2_00,R.drawable.adventurer_idle_2_01,R.drawable.adventurer_idle_2_02,R.drawable.adventurer_idle_2_03};
+    private final int[] pnjId={R.drawable.adventurer_idle_2_00,R.drawable.adventurer_idle_2_01,R.drawable.adventurer_idle_2_02,R.drawable.adventurer_idle_2_03};
     private int frame=0;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -50,7 +47,7 @@ public class MeteorWarriorMenu extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_meteor_warrior_menu);
         FrameLayout rl = findViewById(R.id.base);
         Display display = getWindowManager().getDefaultDisplay();
@@ -125,9 +122,9 @@ public class MeteorWarriorMenu extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public class Task extends TimerTask {
-            Random r = new Random();
-            Animation rotation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+    class Task extends TimerTask {
+            final Random r = new Random();
+            final Animation rotation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
             @Override
             public void run() {
                 time = r.nextInt(1000)+1000 ;
@@ -142,9 +139,9 @@ public class MeteorWarriorMenu extends AppCompatActivity {
         }
     }
 
-    public class Task2 extends TimerTask {
-        Random r = new Random();
-        Animation rotation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+    class Task2 extends TimerTask {
+        final Random r = new Random();
+        final Animation rotation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
         @Override
         public void run() {
             time2 = r.nextInt(1000)+1000 ;
@@ -160,7 +157,7 @@ public class MeteorWarriorMenu extends AppCompatActivity {
         }
     }
 
-    public class Task3 extends TimerTask {
+    class Task3 extends TimerTask {
         @Override
         public void run() {
             frame++;
@@ -174,5 +171,4 @@ public class MeteorWarriorMenu extends AppCompatActivity {
             timer3.schedule(new Task3(), 100);
         }
     }
-
 }

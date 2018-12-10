@@ -10,4 +10,8 @@
     <string name="high_score_0">high score : 0</string>
     <string name="rejouer">REJOUER</string>
     <string name="menu">MENU</string>
+    <string name="jouer">JOUER</string>
+    <string name="meteor_warrior">Meteor Warrior</string>
+    <string name="un_bouclier_dor">Un bouclier doré</string>
+    <string name="de_l_encre">De l\'encre</string>
 </resources>

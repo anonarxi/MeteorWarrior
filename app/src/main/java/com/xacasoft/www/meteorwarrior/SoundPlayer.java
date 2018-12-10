@@ -2,17 +2,16 @@ package com.xacasoft.www.meteorwarrior;
 
 import android.content.Context;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 
-public class SoundPlayer {
+class SoundPlayer {
 
     private AudioAttributes audioAttributes;
-    final int SOUND_POOL_MAX = 2;
+    private final int SOUND_POOL_MAX = 2;
     private static SoundPool soundPool;
 
     private static int hitSound;

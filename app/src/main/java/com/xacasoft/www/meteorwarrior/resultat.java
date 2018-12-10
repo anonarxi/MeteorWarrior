@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import java.util.Objects;
+
 public class resultat extends AppCompatActivity {
 
     private static SoundPlayer sound;
@@ -22,9 +25,9 @@ public class resultat extends AppCompatActivity {
 
         setContentView(R.layout.activity_resultat);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
-        TextView scoreLab = (TextView) findViewById(R.id.score);
-        TextView highScoreLabel = (TextView) findViewById(R.id.highscoreLabel);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        TextView scoreLab = findViewById(R.id.score);
+        TextView highScoreLabel = findViewById(R.id.highscoreLabel);
 
         sound = new SoundPlayer(this);
         sound.playBackSoundGAME();
