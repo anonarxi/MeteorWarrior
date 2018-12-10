@@ -24,12 +24,14 @@ public class jeu extends AppCompatActivity {
     private TextView scoreLabel;
     private TextView vieLabel;
     final private int nb_proj = 3;
+    final private int nb_proj2 = 4;
     final private int screen_div = 12;
     final private int proj_type = R.drawable.star;
+    final private int proj_spe = R.drawable.starspe;
     private List<Integer> screenW = new ArrayList<Integer>();
     private List<Integer> screenH = new ArrayList<Integer>();
-    private ImageView[] Projectile= new ImageView[nb_proj];
-    private int[] speed = new int[nb_proj];
+    private ImageView[] Projectile= new ImageView[nb_proj2];
+    private int[] speed = new int[nb_proj2];
 
     private int screenWidth;
     private int screenHeight;
@@ -86,9 +88,14 @@ public class jeu extends AppCompatActivity {
         hero.setLayoutParams(lp);
         rl.addView(hero);
 
-        for(i=0;i<nb_proj;i++) {
+        for(i=0;i<nb_proj2;i++) {
             Projectile[i] = new ImageView(getApplicationContext());
-            Projectile[i].setImageResource(proj_type);
+            if(i>=nb_proj){
+                Projectile[i].setImageResource(proj_spe);
+            }
+            else {
+                Projectile[i].setImageResource(proj_type);
+            }
             speed[i] = r.nextInt(maxsp-minsp)+minsp;
             lp = new FrameLayout.LayoutParams(screenW.get(screen_div/nb_proj) , screenH.get(screen_div/nb_proj));
             lp.setMargins(screenW.get(screen_div-1),screenH.get(( (screen_div-2)/nb_proj )*(i+1)),0,0);
@@ -120,11 +127,16 @@ public class jeu extends AppCompatActivity {
             if(arg1.getAction() == MotionEvent.ACTION_DOWN) {
                 ImageView tmp = findViewById(arg0.getId());
                 hero.setY(tmp.getY());
-                timer3.schedule(new Task3(), 50);
+                if(timer3 != null) {
+                    timer3.schedule(new Task3(), 50);
+                }
+                else{
+                    return false;
+                }
                 tmp.setX(screenW.get(screen_div));
                 tmpi=r.nextInt(nb_proj);
                 tmp.setY(screenH.get(( (screen_div-2)/nb_proj )* tmpi));
-                if(vitesse < 20) {
+                if(vitesse < 6) {
                     vitesse+=0.5;
                 }
                 score += 100;
@@ -143,8 +155,10 @@ public class jeu extends AppCompatActivity {
     public void changePos(){
         int i,tmp;
         Random r= new Random();
-        for(i=0;i<nb_proj;i++) {
-
+        for(i=0;i<nb_proj2;i++) {
+            if(score < 500 && i>=nb_proj){
+                break;
+            }
             Projectile[i].setX(Projectile[i].getX()-speed[i] );
             if(Projectile[i].getX() < 0 ){
                 vie--;
